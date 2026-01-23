@@ -7,18 +7,32 @@ public class Lab05 {
             this.data = data;
             this.next = null;
         }
+    }
 
         public static void main(String[] args) {
-            System.out.println(factorial(5));
+        System.out.println("factorial(5) = " + factorial(5));
             int[] array = { 1, 2, 3 };
-            System.out.println(sum(array, 2));
-            System.out.println(power(2, 0));
-            System.out.println(binarySearch(array, 8, 0, 0));
-            System.out.println(reverse("null"));
+        System.out.println("sum(array, 2) = " + sum(array, 2));
+        System.out.println("power(2, 0) = " + power(2, 0));
+
+        System.out.println("binarySearch(array, 8) = " +
+                binarySearch(array, 8, 0, array.length - 1));
+        System.out.println("reverse(\"null\") = " + reverse("null"));
+          System.out.println("fib(5) = " + fib(5));
+                  System.out.println("tailSum(5) = " + tailSum(5, 0));
+       Node head = buildList(1, 2, 3, 4);
+        System.out.println("listSum = " + listSum(head));
+        System.out.println("contains 3 = " + contains(head, 3));
+        System.out.println("contains 9 = " + contains(head, 9));
+
+        Node rev = reverseList(head);
+        System.out.println("reversed list head = " + (rev != null ? rev.data : "null"));
 
         }
 
         public static long factorial(int n) {
+                    if (n < 0) throw new IllegalArgumentException("n must be >= 0");
+
             if (n == 0) {
                 return 1;
             }
@@ -26,21 +40,24 @@ public class Lab05 {
         }
 
         public static int sum(int[] arr, int n) {
-            int sum = 0;
-            if (n == 0) {
-                return sum;
+                    if (arr == null) throw new IllegalArgumentException("arr cannot be null");
+        if (n < 0 || n > arr.length) throw new IndexOutOfBoundsException("n: " + n);
+
+            if(n==0){
+                return 0;
             }
-            return arr[n - 1] + sum + sum(arr, n - 1);
+            return arr[n - 1] +  sum(arr, n - 1);
         }
 
         public static long power(long base, int exp) {
-            if (exp == 0) {
-                return 1;
-            }
+           if (exp < 0) throw new IllegalArgumentException("exp must be >= 0");
+        if (exp == 0) return 1;
             return base * power(base, exp - 1);
         }
 
         public static int binarySearch(int[] arr, int target, int low, int high) {
+                    if (arr == null) throw new IllegalArgumentException("arr cannot be null");
+
             if (low > high) {
                 return -1;
             }
@@ -75,6 +92,8 @@ public class Lab05 {
         }
 
         public static long tailSum(int n, long acc) {
+                    if (n < 0) throw new IllegalArgumentException("n must be >= 0");
+
             if (n == 0) {
                 return acc;
             }
@@ -126,4 +145,4 @@ public class Lab05 {
         }
     }
 
-}
+
