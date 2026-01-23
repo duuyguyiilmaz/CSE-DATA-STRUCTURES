@@ -1,17 +1,48 @@
 
 public class Lab06 {
     public static void main(String[] args) {
-        ArrayStack<Integer> arraystack = new ArrayStack<>();
-        System.out.println(arraystack.size());
-        System.out.println(arraystack.isEmpty());
-        arraystack.push(5);
-        System.out.println(arraystack.size());
-        System.out.println(arraystack.isEmpty());
-        arraystack.push(6);
-        System.out.println(arraystack.size());
-        System.out.println(arraystack.top());
-        System.out.println(arraystack.pop());
-        System.out.println(arraystack.size());
+      System.out.println("=== ArrayStack ===");
+        ArrayStack<Integer> aStack = new ArrayStack<>();
+        System.out.println("Empty: " + aStack.isEmpty());
+        aStack.push(10);
+        aStack.push(20);
+        System.out.println("Top: " + aStack.top());
+        System.out.println("Pop: " + aStack.pop());
+        System.out.println("Size: " + aStack.size());
+
+        System.out.println("\n=== LinkedStack ===");
+        LinkedStack<String> lStack = new LinkedStack<>();
+        lStack.push("A");
+        lStack.push("B");
+        lStack.push("C");
+        System.out.println("Top: " + lStack.top());
+        while (!lStack.isEmpty()) {
+            System.out.println("Pop: " + lStack.pop());
+        }
+
+        System.out.println("\n=== ArrayQueue ===");
+        ArrayQueue<Integer> aQueue = new ArrayQueue<>();
+        aQueue.enqueue(1);
+        aQueue.enqueue(2);
+        aQueue.enqueue(3);
+        System.out.println("Front: " + aQueue.front());
+        System.out.println("Dequeue: " + aQueue.dequeue());
+        System.out.println("Front after dequeue: " + aQueue.front());
+        System.out.println("Size: " + aQueue.size());
+
+        System.out.println("\n=== LinkedQueue ===");
+        LinkedQueue<String> lQueue = new LinkedQueue<>();
+        lQueue.enqueue("X");
+        lQueue.enqueue("Y");
+        lQueue.enqueue("Z");
+        System.out.println("Front: " + lQueue.front());
+        while (!lQueue.isEmpty()) {
+            System.out.println("Dequeue: " + lQueue.dequeue());
+        }
+
+        System.out.println("\n=== Empty structure checks ===");
+        System.out.println("Empty stack pop: " + aStack.pop());
+        System.out.println("Empty queue dequeue: " + lQueue.dequeue());
 
     }
 }
@@ -44,7 +75,6 @@ class ArrayStack<E> implements Stack<E> {
     private final E[] data;
     private int top;
 
-    @SuppressWarnings("unchecked")
     public ArrayStack() {
         data = (E[]) new Object[DEFAULT_CAPACITY];
         top = 0;
@@ -62,6 +92,7 @@ class ArrayStack<E> implements Stack<E> {
 
     @Override
     public void push(E item) {
+        if (top == data.length) throw new IllegalStateException("Stack is full");
         data[top] = item;
         top++;
     }
@@ -94,7 +125,6 @@ class ArrayQueue<E> implements Queue<E> {
     private int front;
     private int size;
 
-    @SuppressWarnings("unchecked")
     public ArrayQueue() {
         data = (E[]) new Object[DEFAULT_CAPACITY];
         front = 0;
@@ -113,6 +143,8 @@ class ArrayQueue<E> implements Queue<E> {
 
     @Override
     public void enqueue(E item) {
+        if (size == data.length) throw new IllegalStateException("Queue is full");
+
         int available = (front + size) % data.length;
         data[available] = item;
         size++;
@@ -120,6 +152,8 @@ class ArrayQueue<E> implements Queue<E> {
 
     @Override
     public E dequeue() {
+        if (isEmpty()) return null;
+
         E old = data[front];
         front = (front + 1) % data.length;
         size--;
