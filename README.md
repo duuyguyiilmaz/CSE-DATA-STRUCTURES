@@ -12,3 +12,7 @@ without using built-in collection classes.
 - Null-safe search and removal operations
 - Clean separation of list logic and node structures
 - 
+  -----------------Lab05 – RECURSION-------------------------  
+  Recursive implementations of fundamental algorithms including factorial, array sum,
+  power calculation, binary search, string reversal, Fibonacci sequence, tail recursion,
+  and linked list operations.
