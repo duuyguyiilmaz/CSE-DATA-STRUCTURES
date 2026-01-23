@@ -1,16 +1,26 @@
 
 public class Lab08 {
-    public static void main(String[] args) {
-        PriorityQueue<Integer> pq = new UnsortedArrayPQ<>();
-        pq.insert(5);
-        pq.insert(2);
-        pq.insert(9);
-        pq.insert(1);
+   public static void main(String[] args) {
 
-        System.out.println(pq.min()); // 1
-        System.out.println(pq.removeMin()); // 1
-        System.out.println(pq.min()); // 2
+        PriorityQueue<Integer> pq1 = new UnsortedArrayPQ<>();
+        pq1.insert(5);
+        pq1.insert(2);
+        pq1.insert(9);
+        pq1.insert(1);
 
+        System.out.println(pq1.min());        // 1
+        System.out.println(pq1.removeMin()); // 1
+        System.out.println(pq1.min());        // 2
+
+        PriorityQueue<Integer> pq2 = new SortedLinkedPQ<>();
+        pq2.insert(5);
+        pq2.insert(2);
+        pq2.insert(9);
+        pq2.insert(1);
+
+        System.out.println(pq2.min());        // 1
+        System.out.println(pq2.removeMin()); // 1
+        System.out.println(pq2.min());        // 2
     }
 }
 
@@ -49,11 +59,11 @@ class UnsortedArrayPQ<E extends Comparable<E>> implements PriorityQueue<E> {
     }
 
     public void insert(E element) {
-        if (element == null)
-            return;
+      if (element == null) throw new IllegalArgumentException("Null not allowed");
+
         if (size == data.length) {
-            System.out.println("PQ is full!");
-            return;
+            throw new IllegalStateException("PQ is full");
+
         }
         data[size] = element;
         size++;
@@ -76,8 +86,8 @@ class UnsortedArrayPQ<E extends Comparable<E>> implements PriorityQueue<E> {
     public E min() {
         if (isEmpty())
             return null;
-        int minIdx = findMinIndex();
-        return (minIdx == -1) ? null : data[minIdx];
+
+        return data[findMinIndex()];
     }
 
     public E removeMin() {
@@ -85,8 +95,7 @@ class UnsortedArrayPQ<E extends Comparable<E>> implements PriorityQueue<E> {
             return null;
 
         int minIdx = findMinIndex();
-        if (minIdx == -1)
-            return null;
+
 
         E removed = data[minIdx];
 
@@ -98,18 +107,19 @@ class UnsortedArrayPQ<E extends Comparable<E>> implements PriorityQueue<E> {
     }
 }
 
-class Node<E> {
-    E data;
-    Node<E> next;
 
-    Node(E data) {
-        this.data = data;
-        this.next = null;
-    }
-}
 
 class SortedLinkedPQ<E extends Comparable<E>> implements PriorityQueue<E> {
 
+    private static class Node<E> {
+        E data;
+        Node<E> next;
+
+        Node(E data) {
+            this.data = data;
+            this.next = null;
+        }
+    }
     private Node<E> head;
     private int size;
 
@@ -129,8 +139,8 @@ class SortedLinkedPQ<E extends Comparable<E>> implements PriorityQueue<E> {
     }
 
     public void insert(E element) {
-        if (element == null)
-            return;
+        if (element == null) throw new IllegalArgumentException("Null not allowed");
+
         Node<E> newNode = new Node<>(element);
         if (head == null) {
             head = newNode;
