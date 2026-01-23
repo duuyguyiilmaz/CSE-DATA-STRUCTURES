@@ -1,4 +1,3 @@
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -6,8 +5,44 @@ import java.util.Stack;
 
 public class Lab07 {
     public static void main(String[] args) {
+    ArrayBT<Integer> aTree = new ArrayBT<>(4);
+    aTree.insert(1);
+    aTree.insert(2);
+    aTree.insert(3);
+    aTree.insert(4);
+    aTree.insert(5);
 
-    }
+    List<Integer> list = new java.util.ArrayList<>();
+    aTree.BFS(list);
+    System.out.println("ArrayBT BFS: " + list);
+
+    list.clear();
+    aTree.inorder(list);
+    System.out.println("ArrayBT inorder: " + list);
+
+    LinkedBT<Integer> lTree = new LinkedBT<>();
+    lTree.insert(1);
+    lTree.insert(2);
+    lTree.insert(3);
+    lTree.insert(4);
+    lTree.insert(5);
+
+    list.clear();
+    lTree.BFS(list);
+    System.out.println("LinkedBT BFS: " + list);
+
+    list.clear();
+    lTree.DFS(list);
+    System.out.println("LinkedBT DFS (stack preorder): " + list);
+
+    System.out.println("Contains 4: " + lTree.contains(4));
+    System.out.println("Remove 2: " + lTree.remove(2));
+
+    list.clear();
+    lTree.BFS(list);
+    System.out.println("LinkedBT BFS after remove: " + list);
+}
+
 }
 
 interface ITree<E> {
@@ -32,24 +67,13 @@ interface ITree<E> {
     void postorder(List<E> list);
 }
 
-class Node<E> {
-    E data;
-    Node<E> left;
-    Node<E> right;
 
-    Node(E data) {
-        this.data = data;
-        this.left = null;
-        this.right = null;
-    }
-}
 
 class ArrayBT<E> implements ITree<E> {
 
     private E[] data;
     private int size;
 
-    @SuppressWarnings("unchecked")
     public ArrayBT(int capacity) {
         data = (E[]) new Object[capacity];
         size = 0;
@@ -129,8 +153,8 @@ class ArrayBT<E> implements ITree<E> {
         if (element == null || size == 0)
             return false;
         int target = -1;
-        for (int i = 0; i < data.length; i++) {
-            if (data[i].equals(element)) {
+        for (int i = 0; i < size; i++) {
+            if (element.equals(data[i])) {
                 target = i;
                 break;
             }
@@ -149,7 +173,7 @@ class ArrayBT<E> implements ITree<E> {
             return false;
         }
         for (int i = 0; i < size; i++) {
-            if (data[i].equals(element)) {
+            if (element.equals(data[i])) {
                 return true;
             }
         }
@@ -158,7 +182,9 @@ class ArrayBT<E> implements ITree<E> {
 
     @Override
     public void BFS(List<E> list) {
-        list.addAll(Arrays.asList(data));
+         for (int i = 0; i < size; i++) {
+        list.add(data[i]);
+    }
     }
 
     @Override
@@ -184,6 +210,17 @@ class ArrayBT<E> implements ITree<E> {
 }
 
 class LinkedBT<E> implements ITree<E> {
+    private static class Node<E> {
+        E data;
+        Node<E> left;
+        Node<E> right;
+
+        Node(E data) {
+            this.data = data;
+            this.left = null;
+            this.right = null;
+        }
+    }
 
     private Node<E> root;
     private int size;
@@ -263,20 +300,60 @@ class LinkedBT<E> implements ITree<E> {
 
     @Override
     public boolean remove(E element) {
-        if (element == null || root == null)
-            return false;
-        if (size == 1) {
-            if (root.data.equals(element)) {
-                root = null;
-                size = 0;
-                return true;
-            }
-            return false;
+    if (element == null || root == null) return false;
+  if (size == 1) {
+        if (element.equals(root.data)) {
+            root = null;
+            size = 0;
+            return true;
         }
-        Node<E> target = null;
-        Queue<Node<E>> q = new LinkedList<>();
-        q.add(root);
         return false;
+    }
+        Node<E> target = null;
+    Node<E> last = null;
+    Node<E> lastParent = null;
+
+    Queue<Node<E>> q = new LinkedList<>();
+    Queue<Node<E>> parentQ = new LinkedList<>();
+
+    q.add(root);
+    parentQ.add(null);
+
+    while (!q.isEmpty()) {
+        Node<E> cur = q.remove();
+        Node<E> parent = parentQ.remove();
+
+        if (element.equals(cur.data)) {
+            target = cur;
+        }
+
+        last = cur;
+        lastParent = parent;
+
+        if (cur.left != null) {
+            q.add(cur.left);
+            parentQ.add(cur);
+        }
+        if (cur.right != null) {
+            q.add(cur.right);
+            parentQ.add(cur);
+        }
+    }
+
+    if (target == null) return false;
+
+    target.data = last.data;
+
+    if (lastParent != null) {
+        if (lastParent.right == last) {
+            lastParent.right = null;
+        } else if (lastParent.left == last) {
+            lastParent.left = null;
+        }
+    }
+
+    size--;
+    return true;
     }
 
     @Override
@@ -287,7 +364,7 @@ class LinkedBT<E> implements ITree<E> {
         q.add(root);
         while (!q.isEmpty()) {
             Node<E> cur = q.remove();
-            if (cur.data.equals(element)) {
+            if (element.equals(cur.data)) {
                 return true;
             }
             if (cur.left != null) {
