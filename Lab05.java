@@ -1,5 +1,5 @@
 public class Lab05 {
-    private static class Node {
+   static class Node {
         int data;
         Node next;
 
@@ -75,7 +75,7 @@ public class Lab05 {
         }
 
         public static String reverse(String s) {
-            if (s.length() <= 1 || s == null) {
+            if (s.length() <= 1 ) {
                 return s;
             }
             return reverse(s.substring(1)) + s.charAt(0);

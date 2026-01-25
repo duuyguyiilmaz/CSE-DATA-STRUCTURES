@@ -47,17 +47,17 @@ class UnsortedArrayPQ<E extends Comparable<E>> implements PriorityQueue<E> {
         data = (E[]) new Comparable[DEFAULT_CAPACITY];
         size = 0;
     }
-
+@Override
     public int size() {
 
         return size;
     }
-
+@Override
     public boolean isEmpty() {
 
         return size == 0;
     }
-
+@Override
     public void insert(E element) {
       if (element == null) throw new IllegalArgumentException("Null not allowed");
 
@@ -82,14 +82,14 @@ class UnsortedArrayPQ<E extends Comparable<E>> implements PriorityQueue<E> {
 
         return minIndex;
     }
-
+    @Override
     public E min() {
         if (isEmpty())
             return null;
 
         return data[findMinIndex()];
     }
-
+    @Override
     public E removeMin() {
         if (isEmpty())
             return null;
@@ -127,17 +127,17 @@ class SortedLinkedPQ<E extends Comparable<E>> implements PriorityQueue<E> {
         head = null;
         size = 0;
     }
-
+    @Override
     public int size() {
 
         return size;
     }
-
+    @Override
     public boolean isEmpty() {
 
         return size == 0;
     }
-
+    @Override
     public void insert(E element) {
         if (element == null) throw new IllegalArgumentException("Null not allowed");
 
@@ -162,12 +162,12 @@ class SortedLinkedPQ<E extends Comparable<E>> implements PriorityQueue<E> {
         size++;
 
     }
-
+    @Override
     public E min() {
         return (head == null) ? null : head.data;
 
     }
-
+    @Override
     public E removeMin() {
         if (head == null)
             return null;

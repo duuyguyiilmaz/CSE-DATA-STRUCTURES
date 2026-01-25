@@ -63,7 +63,7 @@ class GNode<T> implements IUndirectedNode<T> {
     public void removeNeighbour(GNode<T> neighbour) {
         neighbours.remove(neighbour);
     }
-
+    @Override
     public String toString() {
         return data.toString();
     }
@@ -85,7 +85,7 @@ interface AdjacencyList<T> {
 }
 
 class Graph<T> implements AdjacencyList<T> {
-    private Map<T, GNode<T>> nodes;
+    private final Map<T, GNode<T>> nodes;
 
     public Graph() {
         this.nodes = new HashMap<>();

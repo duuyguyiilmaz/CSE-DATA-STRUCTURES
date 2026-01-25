@@ -217,8 +217,7 @@ class AVLTree<E extends Comparable<E>>
             }
         }
 
-        if (n == null)
-            return null;
+
 
         updateHeight(n);
 
