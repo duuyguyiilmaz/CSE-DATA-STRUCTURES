@@ -55,5 +55,6 @@ The BST provides basic operations such as insertion, deletion, and search using 
 methods. The AVL Tree extends the BST by maintaining balance after insert and remove
 operations through height updates and rotations, ensuring that the tree height remains
 logarithmic and all operations run efficiently.
-
+---------------- Lab11 – RED-BLACK TREE IMPLEMENTATION ----------------
+This lab focuses on implementing a Red-Black Tree (RBTree) in Java with support for balanced insertion. The tree maintains Red-Black Tree properties by applying recoloring and left/right rotations after each insertion to ensure balance. Each newly inserted node starts as red, and violations are resolved using standard RBTree cases involving the parent, uncle, and grandparent nodes. As a result, the tree remains approximately balanced, guaranteeing efficient search and insertion operations with logarithmic time complexity.
 
