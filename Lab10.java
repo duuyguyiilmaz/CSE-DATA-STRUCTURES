@@ -1,30 +1,29 @@
 public class Lab10 {
     public static void main(String[] args) {
 
-        // Basic sanity test (optional)
         AVLTree<Integer> avl = new AVLTree<>();
         avl.insert(30);
         avl.insert(20);
-        avl.insert(10); // triggers rotation
+        avl.insert(10);
         avl.insert(25);
         avl.insert(40);
         avl.insert(50);
 
-        System.out.println("AVL height: " + avl.height()); // should be balanced
-        System.out.println("Contains 25? " + avl.contains(25));
+        System.out.println("AVL height: " + avl.height());
+        System.out.println("Contains 25 ? " + avl.contains(25));
         avl.remove(20);
-        System.out.println("Contains 20? " + avl.contains(20));
+        System.out.println("Contains 20 ? " + avl.contains(20));
         System.out.println("Size: " + avl.size());
     }
 }
 
-class Node<E extends Comparable<E>> {
-    E data;
-    Node<E> left;
-    Node<E> right;
-    int height;
+class AVLNode<E extends Comparable<E>> {
+  E data;
+   AVLNode<E> left;
+     AVLNode<E> right;
+   int height;
 
-    Node(E data) {
+    AVLNode(E data) {
         this.data = data;
         this.height = 1;
     }
@@ -41,28 +40,28 @@ interface IBST<E extends Comparable<E>> {
 
     boolean isEmpty();
 
-    Node<E> findMin(Node<E> n);
+    AVLNode<E> findMin(AVLNode<E> n);
 }
 
 interface IAVL<E extends Comparable<E>> extends IBST<E> {
     int height();
 
-    int getBalanceFactor(Node<E> node);
+    int getBalanceFactor(AVLNode<E> node);
 
-    Node<E> balance(Node<E> node);
+    AVLNode<E> balance(AVLNode<E> node);
 
-    Node<E> rotateLeft(Node<E> node);
+    AVLNode<E> rotateLeft(AVLNode<E> node);
 
-    Node<E> rotateRight(Node<E> node);
+    AVLNode<E> rotateRight(AVLNode<E> node);
 
-    Node<E> rotateLeftRight(Node<E> node);
+    AVLNode<E> rotateLeftRight(AVLNode<E> node);
 
-    Node<E> rotateRightLeft(Node<E> node);
+    AVLNode<E> rotateRightLeft(AVLNode<E> node);
 }
 
 class BST<E extends Comparable<E>> implements IBST<E> {
 
-    protected Node<E> root;
+    protected AVLNode<E> root;
     protected int size;
 
     @Override
@@ -80,7 +79,7 @@ class BST<E extends Comparable<E>> implements IBST<E> {
         return containsRec(root, element);
     }
 
-    protected boolean containsRec(Node<E> n, E e) {
+    protected boolean containsRec(AVLNode<E> n, E e) {
         if (n == null || e == null)
             return false;
 
@@ -97,13 +96,13 @@ class BST<E extends Comparable<E>> implements IBST<E> {
         root = insertRec(root, element);
     }
 
-    protected Node<E> insertRec(Node<E> n, E e) {
+    protected AVLNode<E> insertRec(AVLNode<E> n, E e) {
         if (e == null)
             return n;
 
         if (n == null) {
             size++;
-            return new Node<>(e);
+            return new AVLNode<>(e);
         }
 
         int cmp = e.compareTo(n.data);
@@ -123,7 +122,7 @@ class BST<E extends Comparable<E>> implements IBST<E> {
         root = removeRec(root, element);
     }
 
-    protected Node<E> removeRec(Node<E> n, E e) {
+    protected AVLNode<E> removeRec(AVLNode<E> n, E e) {
         if (n == null || e == null)
             return n;
 
@@ -144,7 +143,7 @@ class BST<E extends Comparable<E>> implements IBST<E> {
                 size--;
                 return n.left;
             } else {
-                Node<E> successor = findMin(n.right);
+                AVLNode<E> successor = findMin(n.right);
                 n.data = successor.data;
                 n.right = removeRec(n.right, successor.data);
             }
@@ -154,10 +153,10 @@ class BST<E extends Comparable<E>> implements IBST<E> {
     }
 
     @Override
-    public Node<E> findMin(Node<E> n) {
+    public AVLNode<E> findMin(AVLNode<E> n) {
         if (n == null)
             return null;
-        Node<E> cur = n;
+        AVLNode<E> cur = n;
         while (cur.left != null)
             cur = cur.left;
         return cur;
@@ -169,13 +168,13 @@ class AVLTree<E extends Comparable<E>>
         implements IAVL<E> {
 
     @Override
-    protected Node<E> insertRec(Node<E> n, E e) {
+    protected AVLNode<E> insertRec(AVLNode<E> n, E e) {
         if (e == null)
             return n;
 
         if (n == null) {
             size++;
-            return new Node<>(e);
+            return new AVLNode<>(e);
         }
 
         int cmp = e.compareTo(n.data);
@@ -191,7 +190,7 @@ class AVLTree<E extends Comparable<E>>
     }
 
     @Override
-    protected Node<E> removeRec(Node<E> n, E e) {
+    protected AVLNode<E> removeRec(AVLNode<E> n, E e) {
         if (n == null || e == null)
             return n;
 
@@ -212,7 +211,7 @@ class AVLTree<E extends Comparable<E>>
                 size--;
                 return n.left;
             } else {
-                Node<E> successor = findMin(n.right);
+                AVLNode<E> successor = findMin(n.right);
                 n.data = successor.data;
                 n.right = removeRec(n.right, successor.data);
             }
@@ -226,7 +225,7 @@ class AVLTree<E extends Comparable<E>>
         return balance(n);
     }
 
-    private void updateHeight(Node<E> n) {
+    private void updateHeight(AVLNode<E> n) {
         if (n == null)
             return;
         int lh = height(n.left);
@@ -239,19 +238,19 @@ class AVLTree<E extends Comparable<E>>
         return height(root);
     }
 
-    private int height(Node<E> n) {
+    private int height(AVLNode<E> n) {
         return (n == null) ? 0 : n.height;
     }
 
     @Override
-    public int getBalanceFactor(Node<E> n) {
+    public int getBalanceFactor(AVLNode<E> n) {
         if (n == null)
             return 0;
         return height(n.left) - height(n.right);
     }
 
     @Override
-    public Node<E> balance(Node<E> n) {
+    public AVLNode<E> balance(AVLNode<E> n) {
         if (n == null)
             return null;
 
@@ -278,12 +277,12 @@ class AVLTree<E extends Comparable<E>>
     }
 
     @Override
-    public Node<E> rotateLeft(Node<E> y) {
+    public AVLNode<E> rotateLeft(AVLNode<E> y) {
         if (y == null || y.right == null)
             return y;
 
-        Node<E> x = y.right;
-        Node<E> L = x.left;
+        AVLNode<E> x = y.right;
+        AVLNode<E> L = x.left;
 
         x.left = y;
         y.right = L;
@@ -295,12 +294,12 @@ class AVLTree<E extends Comparable<E>>
     }
 
     @Override
-    public Node<E> rotateRight(Node<E> x) {
+    public AVLNode<E> rotateRight(AVLNode<E> x) {
         if (x == null || x.left == null)
             return x;
 
-        Node<E> y = x.left;
-        Node<E> R = y.right;
+        AVLNode<E> y = x.left;
+        AVLNode<E> R = y.right;
 
         y.right = x;
         x.left = R;
@@ -312,7 +311,7 @@ class AVLTree<E extends Comparable<E>>
     }
 
     @Override
-    public Node<E> rotateLeftRight(Node<E> n) {
+    public AVLNode<E> rotateLeftRight(AVLNode<E> n) {
         if (n == null)
             return null;
         n.left = rotateLeft(n.left);
@@ -320,7 +319,7 @@ class AVLTree<E extends Comparable<E>>
     }
 
     @Override
-    public Node<E> rotateRightLeft(Node<E> n) {
+    public AVLNode<E> rotateRightLeft(AVLNode<E> n) {
         if (n == null)
             return null;
         n.right = rotateRight(n.right);

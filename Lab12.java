@@ -1,31 +1,48 @@
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Set;
-import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 
 public class Lab12 {
     public static void main(String[] args) {
+         Graph<String> graph = new Graph<>();
+
+    // Nodes & edges (undirected graph)
+    graph.addEdge("A", "B");
+    graph.addEdge("A", "C");
+    graph.addEdge("B", "D");
+    graph.addEdge("C", "D");
+    graph.addEdge("C", "E");
+    graph.addEdge("D", "F");
+    graph.addEdge("E", "F");
+
+    // BFS
+    System.out.println("BFS from A:");
+    System.out.println(graph.bfs("A"));
+
+    // DFS
+    System.out.println("DFS from A:");
+    System.out.println(graph.dfs("A"));
+
 
     }
 }
 
 interface IUndirectedNode<T> {
-    void addNeighbour(Node<T> node);
+    void addNeighbour(GNode<T> node);
 
-    void removeNeighbour(Node<T> node);
+    void removeNeighbour(GNode<T> node);
 }
 
-class Node<T> implements IUndirectedNode<T> {
+class GNode<T> implements IUndirectedNode<T> {
     T data;
-    List<Node<T>> neighbours;
+    List<GNode<T>> neighbours;
     boolean visited;
-    Node<T> parent;
+    GNode<T> parent;
 
-    public Node(T data) {
+    public GNode(T data) {
         this.data = data;
         neighbours = new ArrayList<>();
         visited = false;
@@ -33,7 +50,7 @@ class Node<T> implements IUndirectedNode<T> {
     }
 
     @Override
-    public void addNeighbour(Node<T> neighbour) {
+    public void addNeighbour(GNode<T> neighbour) {
         if (neighbour == null)
             return;
         if (!neighbours.contains(neighbour)) {
@@ -43,7 +60,7 @@ class Node<T> implements IUndirectedNode<T> {
     }
 
     @Override
-    public void removeNeighbour(Node<T> neighbour) {
+    public void removeNeighbour(GNode<T> neighbour) {
         neighbours.remove(neighbour);
     }
 
@@ -65,11 +82,10 @@ interface AdjacencyList<T> {
 
     List<T> dfs(T startData);
 
-    List<T> getShortestPath(T startData, T endData);
 }
 
 class Graph<T> implements AdjacencyList<T> {
-    private Map<T, Node<T>> nodes;
+    private Map<T, GNode<T>> nodes;
 
     public Graph() {
         this.nodes = new HashMap<>();
@@ -80,7 +96,7 @@ class Graph<T> implements AdjacencyList<T> {
         if (data == null) {
             return;
         }
-        Node<T> newNode = new Node<>(data);
+        GNode<T> newNode = new GNode<>(data);
         if (!nodes.containsKey(data)) {
             nodes.put(data, newNode);
         }
@@ -94,8 +110,8 @@ class Graph<T> implements AdjacencyList<T> {
         }
         addNode(data1);
         addNode(data2);
-        Node<T> n1 = nodes.get(data1);
-        Node<T> n2 = nodes.get(data2);
+        GNode<T> n1 = nodes.get(data1);
+        GNode<T> n2 = nodes.get(data2);
         n1.addNeighbour(n2);
         n2.addNeighbour(n1);
 
@@ -103,11 +119,11 @@ class Graph<T> implements AdjacencyList<T> {
 
     @Override
     public void removeNode(T data) {
-        Node<T> target = nodes.get(data);
+        GNode<T> target = nodes.get(data);
         if (target == null) {
             return;
         }
-        for (Node<T> other : nodes.values()) {
+        for (GNode<T> other : nodes.values()) {
             other.removeNeighbour(target);
         }
         nodes.remove(data);
@@ -115,8 +131,8 @@ class Graph<T> implements AdjacencyList<T> {
 
     @Override
     public void removeEdge(T data1, T data2) {
-        Node<T> n1 = nodes.get(data1);
-        Node<T> n2 = nodes.get(data2);
+        GNode<T> n1 = nodes.get(data1);
+        GNode<T> n2 = nodes.get(data2);
         if (n1 == null || n2 == null) {
             return;
         }
@@ -126,22 +142,22 @@ class Graph<T> implements AdjacencyList<T> {
 
     @Override
     public List<T> bfs(T startData) {
-        Node<T> start = nodes.get(startData);
+        GNode<T> start = nodes.get(startData);
         if (start == null) {
             return new ArrayList<>();
         }
-        for (Node<T> node : nodes.values()) {
+        for (GNode<T> node : nodes.values()) {
             node.visited = false;
             node.parent = null;
         }
         List<T> result = new ArrayList<>();
-        Queue<Node<T>> queue = new LinkedList<>();
+        Queue<GNode<T>> queue = new LinkedList<>();
         start.visited = true;
         queue.add(start);
         while (!queue.isEmpty()) {
-            Node<T> node = queue.poll();
+            GNode<T> node = queue.poll();
             result.add(node.data);
-            for (Node<T> neighbour : node.neighbours) {
+            for (GNode<T> neighbour : node.neighbours) {
                 if (!neighbour.visited) {
                     neighbour.visited = true;
                     queue.add(neighbour);
@@ -153,32 +169,32 @@ class Graph<T> implements AdjacencyList<T> {
 
     @Override
     public List<T> dfs(T startData) {
-        Node<T> start = nodes.get(startData);
+        GNode<T> start = nodes.get(startData);
         if (start == null) {
             return new ArrayList<>();
         }
-        List<T> result = new ArrayList<>();
-        Set<Node<T>> visited = new HashSet<>();
-        dfsHelper(start, visited, result);
+        for (GNode<T> node : nodes.values()) {
+            node.visited = false;
+            node.parent = null;
+        }
+                List<T> result = new ArrayList<>();
+        dfsHelper(start,  result);
         return result;
     }
 
-    private void dfsHelper(Node<T> current, Set<Node<T>> visited, List<T> result) {
+    private void dfsHelper(GNode<T> current, List<T> result) {
         if (current == null) {
             return;
         }
-        visited.add(current);
+      current.visited = true;
         result.add(current.data);
-        for (Node<T> neighbour : current.neighbours) {
+        for (GNode<T> neighbour : current.neighbours) {
             if (!neighbour.visited) {
-                dfsHelper(neighbour, visited, result);
+                dfsHelper(neighbour,  result);
             }
         }
 
     }
 
-    @Override
-    public List<T> getShortestPath(T startData, T endData) {
-        return List.of();
-    }
+
 }

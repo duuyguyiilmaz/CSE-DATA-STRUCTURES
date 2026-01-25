@@ -2,65 +2,32 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-/**
- * CS201 – Data Structures
- * Lab 11 – Red-Black Trees
- *
- * In this lab, you will:
- * - Implement a Red-Black Tree
- * - Maintain all RB Tree insertion properties
- * - Implement recoloring and rotations
- * - Ensure the tree remains balanced after each insertion
- *
- */
-
 public class Lab11 {
     public static void main(String[] args) {
-        RBTree<Integer> tree = new RBTree<>();
-        /*
-         * tree.insert(33);
-         * tree.insert(13);
-         * tree.insert(53);
-         * tree.insert(11);
-         * tree.insert(21);
-         * tree.insert(41);
-         * tree.insert(61);
-         * tree.insert(15);
-         * tree.insert(31);
-         */
+      RBTree<Integer> tree = new RBTree<>();
 
-        /*
-         * tree.insert(50);
-         * tree.insert(20);
-         * tree.insert(10);
-         */
+    tree.insert(33);
+    tree.insert(13);
+    tree.insert(53);
+    tree.insert(11);
+    tree.insert(21);
+    tree.insert(41);
+    tree.insert(61);
+    tree.insert(15);
+    tree.insert(31);
 
-        /*
-         * tree.insert(36);
-         * tree.insert(15);
-         * tree.insert(50);
-         * tree.insert(70);
-         * tree.insert(5);
-         * tree.insert(30);
-         * tree.insert(3);
-         * tree.insert(6);
-         * tree.insert(23);
-         * tree.insert(33);
-         * tree.insert(32);
-         */
-        System.out.println(tree);
+    System.out.println(tree);
 
-        // You may test manually here if you want.
-        // Official testing will be done using JUnit tests.
+
     }
 }
 
-class Node<E> {
+class RBNODE1<E> {
     E data;
-    Node<E> left, right, parent;
+    RBNODE1<E> left, right,parent;
     boolean color = true; // true = RED, false = BLACK
 
-    public Node(E data) {
+    public RBNODE1(E data) {
         this.data = data;
         this.color = true; // new nodes start red
     }
@@ -85,21 +52,21 @@ interface ITree<E> extends IList<E> {
 }
 
 interface IBalancedTree<E> extends ITree<E> {
-    Node<E> rotateRight(Node<E> node);
+    RBNODE1<E> rotateRight(RBNODE1<E> node);
 
-    Node<E> rotateLeft(Node<E> node);
+    RBNODE1<E> rotateLeft(RBNODE1<E> node);
 }
 
 interface IRBTree<E> extends IBalancedTree<E> {
-    void check(Node<E> node);
+    void check(RBNODE1<E> node);
 
-    Node<E> balance(Node<E> node);
+    RBNODE1<E> balance(RBNODE1<E> node);
 
-    void recolor(Node<E> node);
+    void recolor(RBNODE1<E> node);
 }
 
 class RBTree<E extends Comparable<E>> implements IRBTree<E> {
-    private Node<E> root;
+    private RBNODE1<E> root;
     private int size;
 
     public RBTree() {
@@ -116,15 +83,15 @@ class RBTree<E extends Comparable<E>> implements IRBTree<E> {
     }
 
     @Override
-    public Node<E> rotateLeft(Node<E> node) {
+    public RBNODE1<E> rotateLeft(RBNODE1<E> node) {
         if (node == null)
             return null;
 
-        Node<E> x = node.right; // new root of this subtree
+        RBNODE1<E> x = node.right; // new root of this subtree
         if (x == null)
             return node; // cannot rotate
 
-        Node<E> B = x.left; // will move to node.right
+        RBNODE1<E> B = x.left; // will move to node.right
 
         // 1) move B
         node.right = B;
@@ -149,15 +116,15 @@ class RBTree<E extends Comparable<E>> implements IRBTree<E> {
     }
 
     @Override
-    public Node<E> rotateRight(Node<E> node) {
+    public RBNODE1<E> rotateRight(RBNODE1<E> node) {
         if (node == null)
             return null;
 
-        Node<E> y = node.left; // new root of this subtree
+        RBNODE1<E> y = node.left; // new root of this subtree
         if (y == null)
             return node; // cannot rotate
 
-        Node<E> B = y.right; // will move to node.left
+        RBNODE1<E> B = y.right; // will move to node.left
 
         // 1) move B
         node.left = B;
@@ -181,11 +148,11 @@ class RBTree<E extends Comparable<E>> implements IRBTree<E> {
         return y;
     }
 
-    private boolean isRed(Node<E> node) {
+    private boolean isRed(RBNODE1<E> node) {
         return node != null && node.color; // true = RED
     }
 
-    private Node<E> getSibling(Node<E> node) {
+    private RBNODE1<E> getSibling(RBNODE1<E> node) {
         if (node == null || node.parent == null)
             return null;
         if (node == node.parent.left)
@@ -199,7 +166,7 @@ class RBTree<E extends Comparable<E>> implements IRBTree<E> {
             return;
 
         if (root == null) {
-            root = new Node<>(data);
+            root = new RBNODE1<>(data);
             root.color = false; // root is BLACK
             root.parent = null;
             size = 1;
@@ -213,12 +180,12 @@ class RBTree<E extends Comparable<E>> implements IRBTree<E> {
             root.color = false;
     }
 
-    private void insertRec(Node<E> node, E data) {
+    private void insertRec(RBNODE1<E> node, E data) {
         int cmp = data.compareTo(node.data);
 
         if (cmp < 0) {
             if (node.left == null) {
-                Node<E> newNode = new Node<>(data);
+                RBNODE1<E> newNode = new RBNODE1<>(data);
                 node.left = newNode;
                 newNode.parent = node;
                 size++;
@@ -228,7 +195,7 @@ class RBTree<E extends Comparable<E>> implements IRBTree<E> {
             }
         } else if (cmp > 0) {
             if (node.right == null) {
-                Node<E> newNode = new Node<>(data);
+                RBNODE1<E> newNode = new RBNODE1<>(data);
                 node.right = newNode;
                 newNode.parent = node;
                 size++;
@@ -243,7 +210,7 @@ class RBTree<E extends Comparable<E>> implements IRBTree<E> {
     }
 
     @Override
-    public void check(Node<E> newNode) {
+    public void check(RBNODE1<E> newNode) {
         if (newNode == null)
             return;
 
@@ -258,8 +225,8 @@ class RBTree<E extends Comparable<E>> implements IRBTree<E> {
         if (!isRed(newNode.parent))
             return;
 
-        Node<E> parent = newNode.parent;
-        Node<E> grand = parent.parent;
+        RBNODE1<E> parent = newNode.parent;
+        RBNODE1<E> grand = parent.parent;
 
         // If parent is root (grand null): just force parent black
         if (grand == null) {
@@ -268,7 +235,7 @@ class RBTree<E extends Comparable<E>> implements IRBTree<E> {
         }
 
         // Uncle is sibling of parent
-        Node<E> uncle = (parent == grand.left) ? grand.right : grand.left;
+        RBNODE1<E> uncle = (parent == grand.left) ? grand.right : grand.left;
 
         // Case 1: Uncle is red -> recolor grand (and recurse upward)
         if (isRed(uncle)) {
@@ -278,7 +245,7 @@ class RBTree<E extends Comparable<E>> implements IRBTree<E> {
         }
 
         // Case 2/3: Uncle is black -> rotations
-        Node<E> newSubRoot = balance(newNode);
+        RBNODE1<E> newSubRoot = balance(newNode);
 
         // After balancing, ensure root reference is correct if it changed
         while (root != null && root.parent != null)
@@ -288,12 +255,12 @@ class RBTree<E extends Comparable<E>> implements IRBTree<E> {
     }
 
     @Override
-    public void recolor(Node<E> grandParent) {
+    public void recolor(RBNODE1<E> grandParent) {
         if (grandParent == null)
             return;
 
-        Node<E> parent = null;
-        Node<E> uncle = null;
+        RBNODE1<E> parent = null;
+        RBNODE1<E> uncle = null;
 
         // Determine which child is parent by checking which side has a red child-parent
         // chain
@@ -319,19 +286,19 @@ class RBTree<E extends Comparable<E>> implements IRBTree<E> {
     }
 
     @Override
-    public Node<E> balance(Node<E> newNode) {
+    public RBNODE1<E> balance(RBNODE1<E> newNode) {
         if (newNode == null)
             return null;
 
-        Node<E> parent = newNode.parent;
-        Node<E> grand = (parent != null) ? parent.parent : null;
+        RBNODE1<E> parent = newNode.parent;
+        RBNODE1<E> grand = (parent != null) ? parent.parent : null;
         if (parent == null || grand == null)
             return newNode;
 
         boolean parentIsLeft = (parent == grand.left);
         boolean nodeIsLeft = (newNode == parent.left);
 
-        Node<E> subRoot;
+        RBNODE1<E> subRoot;
 
         // LL
         if (parentIsLeft && nodeIsLeft) {
@@ -360,7 +327,7 @@ class RBTree<E extends Comparable<E>> implements IRBTree<E> {
             // find the node that is now under subRoot (old grand)
             // In all cases, old grand is either subRoot.left or subRoot.right depending on
             // rotation.
-            Node<E> oldGrand = (subRoot.left == grand || subRoot.right == grand) ? grand : null;
+            RBNODE1<E> oldGrand = (subRoot.left == grand || subRoot.right == grand) ? grand : null;
             if (oldGrand != null)
                 oldGrand.color = true; // RED
         }
@@ -373,7 +340,7 @@ class RBTree<E extends Comparable<E>> implements IRBTree<E> {
         return containsRec(root, data) != null;
     }
 
-    private Node<E> containsRec(Node<E> node, E data) {
+    private RBNODE1<E> containsRec(RBNODE1<E> node, E data) {
         if (node == null || data == null)
             return null;
 
@@ -385,12 +352,12 @@ class RBTree<E extends Comparable<E>> implements IRBTree<E> {
         return containsRec(node.right, data);
     }
 
-    public void BFS(List<Node<E>> list) {
-        Queue<Node<E>> q = new LinkedList<>();
+    public void BFS(List<RBNODE1<E>> list) {
+        Queue<RBNODE1<E>> q = new LinkedList<>();
         q.offer(root);
 
         while (!q.isEmpty()) {
-            Node<E> current = q.poll();
+            RBNODE1<E> current = q.poll();
             list.add(current);
             if (current != null) {
                 q.offer(current.left);
@@ -401,14 +368,14 @@ class RBTree<E extends Comparable<E>> implements IRBTree<E> {
 
     @Override
     public String toString() {
-        LinkedList<Node<E>> list = new LinkedList<>();
+        LinkedList<RBNODE1<E>> list = new LinkedList<>();
         this.BFS(list);
 
         StringBuilder sbNodes = new StringBuilder();
         StringBuilder sbIndexes = new StringBuilder();
 
         for (int i = 0; i < list.size(); i++) {
-            Node<E> node = list.get(i);
+            RBNODE1<E> node = list.get(i);
 
             String nodeStr = (node == null) ? "[null|B]" : node.toString();
             String indexStr = String.valueOf(i);
