@@ -49,5 +49,11 @@ constant time (O(1)), while finding and removing the minimum element requires li
 time (O(n)). SortedLinkedPQ is a linked-list-based implementation that maintains elements
 in sorted order, allowing min and removeMin operations to run in constant time (O(1)),
 with insertion taking linear time (O(n)).
+---------------- Lab10 – AVL TREE IMPLEMENTATION ----------------
+This lab focuses on implementing a Binary Search Tree (BST) and an AVL Tree in Java.
+The BST provides basic operations such as insertion, deletion, and search using recursive
+methods. The AVL Tree extends the BST by maintaining balance after insert and remove
+operations through height updates and rotations, ensuring that the tree height remains
+logarithmic and all operations run efficiently.
 
 
